@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ragBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#000000"/>
+      <stop offset="100%" stop-color="#0a0a0c"/>
+    </linearGradient>
+    <linearGradient id="silverGrey" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#52525b"/>
+      <stop offset="50%" stop-color="#a1a1aa"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#ragBg)"/>
+  <rect width="100%" height="100%" fill="none" stroke="#1f1f1f" stroke-width="1.5"/>
+  
+  <!-- Grid lines -->
+  <path d="M 0,50 L 600,50 M 0,100 L 600,100 M 0,150 L 600,150 M 0,200 L 600,200 M 0,250 L 600,250 M 0,300 L 600,300 M 0,350 L 600,350" stroke="#141416" stroke-width="0.5"/>
+  <path d="M 100,0 L 100,400 M 200,0 L 200,400 M 300,0 L 300,400 M 400,0 L 400,400 M 500,0 L 500,400" stroke="#141416" stroke-width="0.5"/>
+
+  <!-- Window Header -->
+  <rect width="600" height="40" fill="#0c0c0e"/>
+  <circle cx="25" cy="20" r="4" fill="#27272a"/>
+  <circle cx="40" cy="20" r="4" fill="#27272a"/>
+  <circle cx="55" cy="20" r="4" fill="#27272a"/>
+  <text x="300" y="25" font-family="monospace" font-size="11" fill="#a1a1aa" text-anchor="middle" font-weight="bold">NEXUS_AI_RAG // RETRIEVAL_ENGINE</text>
+
+  <!-- Left Side: Source Documents Ingestion -->
+  <g transform="translate(40, 70)">
+    <!-- Document Stack -->
+    <rect x="0" y="20" width="120" height="150" rx="3" fill="#09090b" stroke="#3f3f46" stroke-width="1.5"/>
+    <line x1="20" y1="50" x2="100" y2="50" stroke="#a1a1aa" stroke-width="2"/>
+    <line x1="20" y1="75" x2="100" y2="75" stroke="#27272a" stroke-width="2"/>
+    <line x1="20" y1="100" x2="80" y2="100" stroke="#27272a" stroke-width="2"/>
+    <line x1="20" y1="125" x2="60" y2="125" stroke="#52525b" stroke-width="2"/>
+    
+    <text x="60" y="190" font-family="sans-serif" font-size="11" fill="#71717a" text-anchor="middle">Corporate Doc.pdf</text>
+  </g>
+
+  <!-- Flow Arrows / Processing (Middle) -->
+  <g transform="translate(190, 150)">
+    <path d="M 0,20 L 60,20" fill="none" stroke="url(#silverGrey)" stroke-width="2" stroke-dasharray="4 2"/>
+    <path d="M 230,20 L 290,20" fill="none" stroke="url(#silverGrey)" stroke-width="2" stroke-dasharray="4 2"/>
+    
+    <rect x="75" y="-10" width="140" height="60" rx="4" fill="#0c0c0e" stroke="#52525b" stroke-width="1.5"/>
+    <text x="145" y="15" font-family="monospace" font-size="9" fill="#ffffff" text-anchor="middle" font-weight="bold">EMBEDDINGS GENERATION</text>
+    <text x="145" y="32" font-family="monospace" font-size="8" fill="#71717a" text-anchor="middle">text-embedding-3</text>
+  </g>
+
+  <!-- Right Side: Vector DB pgvector -->
+  <g transform="translate(420, 70)">
+    <rect x="0" y="20" width="140" height="150" rx="3" fill="#09090b" stroke="#3f3f46" stroke-width="1.5"/>
+    
+    <!-- Vector Grid Nodes representation -->
+    <circle cx="35" cy="55" r="3.5" fill="#ffffff"/>
+    <circle cx="70" cy="85" r="3.5" fill="#a1a1aa"/>
+    <circle cx="105" cy="115" r="3.5" fill="#52525b"/>
+    
+    <!-- Node connections -->
+    <path d="M 35,55 L 70,85 L 105,115" fill="none" stroke="#27272a" stroke-width="1" stroke-dasharray="2 2"/>
+    <path d="M 35,55 L 105,115" fill="none" stroke="#27272a" stroke-width="0.5"/>
+    
+    <text x="70" y="190" font-family="sans-serif" font-size="11" fill="#71717a" text-anchor="middle">Vector pgvector</text>
+  </g>
+
+  <!-- Bottom Panel: User Query Chat Interface -->
+  <g transform="translate(40, 290)">
+    <rect width="520" height="80" rx="6" fill="#0c0c0e" stroke="#27272a" stroke-width="1"/>
+    
+    <text x="20" y="30" font-family="monospace" font-size="11" fill="#ffffff">&gt; Query: "What is the Q3 server SLA standard?"</text>
+    <text x="20" y="55" font-family="monospace" font-size="11" fill="#a1a1aa">&gt; Response: "SLA is 99.95% [Source: doc.pdf, pg. 4]"</text>
+  </g>
+</svg>

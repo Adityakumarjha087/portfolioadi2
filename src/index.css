@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  
+  --color-dark-bg: #000000;
+  --color-dark-surface: #0a0a0a;
+  --color-dark-border: #1a1a1a;
+  --color-dark-text-primary: #ffffff;
+  --color-dark-text-secondary: #a1a1aa;
+  
+  --color-brand-purple: #ffffff;
+  --color-brand-blue: #e4e4e7;
+  --color-brand-accent: #71717a;
+}
+
+/* Custom global styles */
+html {
+  scroll-behavior: smooth;
+  background-color: #000000;
+}
+
+body {
+  background-color: #000000;
+  color: var(--color-dark-text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+/* Premium Minimalist Panels (pure dark surface, no heavy blurs that lag scroll) */
+.glass-panel {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+}
+
+.glass-panel-hover:hover {
+  border-color: #3f3f46;
+  background: #0e0e0e;
+}
+
+/* Custom Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Hide scrollbars for sliders */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom focus indicator */
+*:focus-visible {
+  outline: 1px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* Accessibility: prefers-reduced-motion config */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
