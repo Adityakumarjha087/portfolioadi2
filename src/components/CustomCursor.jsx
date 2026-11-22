@@ -39,40 +39,20 @@ export default function CustomCursor() {
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
-    // Dynamic hover listeners for links, buttons, and custom classes
-    const addHoverListeners = () => {
-      const hoverables = document.querySelectorAll(
-        "a, button, [role='button'], input, textarea, select, .project-card, .interactive-hover"
-      );
-
-      const onMouseOver = () => setIsHovered(true);
-      const onMouseOut = () => setIsHovered(false);
-
-      hoverables.forEach((el) => {
-        el.addEventListener("mouseover", onMouseOver);
-        el.addEventListener("mouseout", onMouseOut);
-      });
-
-      return () => {
-        hoverables.forEach((el) => {
-          el.removeEventListener("mouseover", onMouseOver);
-          el.removeEventListener("mouseout", onMouseOut);
-        });
-      };
+    // Delegated hover detection: works for dynamically added content (like
+    // modals) without re-attaching listeners on every DOM mutation
+    const hoverSelector =
+      "a, button, [role='button'], input, textarea, select, .project-card, .interactive-hover";
+    const onMouseOver = (e) => {
+      setIsHovered(Boolean(e.target.closest?.(hoverSelector)));
     };
-
-    // Observe DOM changes to re-add listeners to dynamically generated content (like modals)
-    const observer = new MutationObserver(addHoverListeners);
-    observer.observe(document.body, { childList: true, subtree: true });
-    
-    const removeListeners = addHoverListeners();
+    document.addEventListener("mouseover", onMouseOver);
 
     return () => {
       window.removeEventListener("mousemove", moveMouse);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
-      removeListeners();
-      observer.disconnect();
+      document.removeEventListener("mouseover", onMouseOver);
       mediaQuery.removeEventListener("change", handleMediaChange);
     };
   }, [isMobile, cursorX, cursorY]);
