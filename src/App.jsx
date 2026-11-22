@@ -26,6 +26,13 @@ export default function App() {
 
       {!isLoading && (
         <div className="relative min-h-screen text-dark-text-primary bg-dark-bg selection:bg-white/20 selection:text-white">
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-full focus:bg-white focus:text-black focus:text-sm focus:font-medium"
+          >
+            Skip to main content
+          </a>
+
           {/* Custom Trail Cursor */}
           <CustomCursor />
 
@@ -36,7 +43,7 @@ export default function App() {
           <Scene3D />
 
           {/* Single-Page Layout Sections */}
-          <main className="relative z-10">
+          <main id="main-content" className="relative z-10">
             <Hero />
             <About />
             <Experience />
