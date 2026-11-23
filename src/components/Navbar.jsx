@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
-import { Menu, X, ArrowUpRight } from "lucide-react";
-import { navItems, profile, resumes } from "../data/site";
-import ResumeMenu from "./ResumeMenu";
+import { Menu, X } from "lucide-react";
+import { navItems, profile } from "../data/site";
+import ResumeLink from "./ResumeLink";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,7 +95,7 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden lg:block">
-            <ResumeMenu className="btn btn-ghost btn-sm" align="right" />
+            <ResumeLink className="btn btn-ghost btn-sm" />
           </div>
 
           <button
@@ -136,13 +136,8 @@ export default function Navbar() {
                   {item.label}
                 </motion.a>
               ))}
-              <div className="mt-6 pt-6 border-t border-zinc-800 flex flex-col gap-3">
-                {resumes.map((r) => (
-                  <a key={r.id} href={r.href} target="_blank" rel="noopener noreferrer" onClick={close} className="flex items-center justify-between text-zinc-300 py-1.5">
-                    {r.title} resume
-                    <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
-                  </a>
-                ))}
+              <div className="mt-6 pt-6 border-t border-zinc-800">
+                <ResumeLink className="btn btn-primary w-full" onClick={close} />
               </div>
             </nav>
           </motion.div>

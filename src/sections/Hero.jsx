@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } fr
 import { ArrowDown, Mail, MapPin } from "lucide-react";
 import { Github, Linkedin } from "../components/Icons";
 import { Magnetic } from "../components/Motion";
-import ResumeMenu from "../components/ResumeMenu";
+import ResumeLink from "../components/ResumeLink";
 import { profile } from "../data/site";
 
 const Scene3D = lazy(() => import("../components/Scene3D"));
@@ -109,7 +109,9 @@ export default function Hero({ ready }) {
               <ArrowDown className="w-4 h-4" aria-hidden="true" />
             </a>
           </Magnetic>
-          <ResumeMenu />
+          <Magnetic>
+            <ResumeLink />
+          </Magnetic>
           <Magnetic>
             <a href="#contact" className="btn btn-ghost">Contact me</a>
           </Magnetic>

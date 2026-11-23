@@ -1,4 +1,4 @@
-// Merged from both resumes.
+// From the resumes.
 export const skillCategories = [
   {
     name: "GenAI & LLM",

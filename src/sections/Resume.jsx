@@ -1,36 +1,34 @@
 import { ArrowUpRight, FileText } from "lucide-react";
-import { resumes } from "../data/site";
+import { profile, resumeUrl } from "../data/site";
 import { Reveal, SectionHeading, SpotlightCard } from "../components/Motion";
 
 export default function Resume() {
   return (
     <section id="resume" className="py-24 md:py-32 px-5 md:px-12 max-w-7xl mx-auto">
-      <SectionHeading title="My resume">Two versions, depending on the role you are hiring for.</SectionHeading>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {resumes.map((r, i) => (
-          <Reveal key={r.id} delay={i * 0.1}>
-            <SpotlightCard
-              as="a"
-              href={r.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group h-full min-h-64 p-7 md:p-9 rounded-3xl flex flex-col justify-between gap-10"
-            >
-              <div className="flex justify-between items-start">
-                <FileText className="w-8 h-8 text-white" aria-hidden="true" />
-                <span className="w-12 h-12 rounded-full border border-zinc-700 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black group-hover:rotate-45 transition-all duration-300">
-                  <ArrowUpRight className="w-5 h-5" aria-hidden="true" />
-                </span>
-              </div>
-              <div>
-                <h3 className="font-display font-bold text-3xl md:text-4xl text-white">{r.title}</h3>
-                <p className="text-dark-text-secondary mt-3 leading-relaxed">{r.focus}</p>
-                <p className="text-sm text-zinc-500 mt-4">{r.source} in a new tab</p>
-              </div>
-            </SpotlightCard>
-          </Reveal>
-        ))}
-      </div>
+      <SectionHeading title="My resume" />
+      <Reveal>
+        <SpotlightCard
+          as="a"
+          href={resumeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group p-7 md:p-12 rounded-3xl flex items-center justify-between gap-6"
+        >
+          <div className="flex flex-col gap-5">
+            <FileText className="w-9 h-9 text-white" aria-hidden="true" />
+            <div>
+              <h3 className="font-display font-bold text-3xl md:text-5xl text-white">{profile.name}</h3>
+              <p className="text-dark-text-secondary mt-3 leading-relaxed md:text-lg">
+                LLM training, RAG and agents, with full-stack delivery in TypeScript and Python.
+              </p>
+              <p className="text-sm text-zinc-500 mt-4">Opens in Google Drive in a new tab</p>
+            </div>
+          </div>
+          <span className="w-14 h-14 md:w-20 md:h-20 rounded-full border border-zinc-700 flex items-center justify-center shrink-0 text-white group-hover:bg-white group-hover:text-black group-hover:rotate-45 transition-all duration-300">
+            <ArrowUpRight className="w-6 h-6 md:w-8 md:h-8" aria-hidden="true" />
+          </span>
+        </SpotlightCard>
+      </Reveal>
     </section>
   );
 }

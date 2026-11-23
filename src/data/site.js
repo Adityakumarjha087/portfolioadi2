@@ -1,4 +1,4 @@
-// Single source of truth for identity, links, resumes and contact delivery.
+// Single source of truth for identity, links, resume and contact delivery.
 
 export const profile = {
   name: "Aditya Kumar Jha",
@@ -12,29 +12,14 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/adityajha12/",
 };
 
-export const resumes = [
-  {
-    id: "full-stack",
-    title: "Full Stack Developer",
-    focus: "TypeScript, Next.js, Node.js, PostgreSQL, REST APIs and integrations",
-    href: "https://drive.google.com/file/d/1-mjUQCTo63Q0eVAUaN9MxZeRF75daa9p/view?usp=sharing",
-    source: "Opens in Google Drive",
-  },
-  {
-    id: "ai-engineer",
-    title: "AI Engineer",
-    focus: "LLM training (RL, SFT), RAG, multi-agent systems, Python and evaluation",
-    href: "https://drive.google.com/file/d/1hh7WvTzX2nVztACI9YKzPsRfBNz8DFEJ/view?usp=sharing",
-    source: "Opens in Google Drive",
-  },
-];
+export const resumeUrl =
+  "https://drive.google.com/file/d/1S0EN1rEbm6FSerPTyTaVxUBIAS2v1bMB/view?usp=sharing";
 
 export const navItems = [
   { label: "About", id: "about" },
   { label: "Experience", id: "experience" },
   { label: "Projects", id: "projects" },
   { label: "Skills", id: "skills" },
-  { label: "Resume", id: "resume" },
   { label: "Contact", id: "contact" },
 ];
 
