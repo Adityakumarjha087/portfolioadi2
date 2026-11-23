@@ -24,8 +24,8 @@ export const resumes = [
     id: "ai-engineer",
     title: "AI Engineer",
     focus: "LLM training (RL, SFT), RAG, multi-agent systems, Python and evaluation",
-    href: "/Aditya_Kumar_Jha_AI_Engineer_Resume.pdf",
-    source: "Opens as PDF",
+    href: "https://drive.google.com/file/d/1hh7WvTzX2nVztACI9YKzPsRfBNz8DFEJ/view?usp=sharing",
+    source: "Opens in Google Drive",
   },
 ];
 
