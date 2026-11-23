@@ -23,10 +23,15 @@ export default function Contact() {
   const [copied, setCopied] = useState(false);
   const email = "9aadityakumar12@gmail.com"; 
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard is unavailable (e.g. insecure context); fall back to the mail client.
+      window.location.href = `mailto:${email}`;
+    }
   };
 
   const socialLinks = [
@@ -103,6 +108,7 @@ export default function Contact() {
 
               {link.isAction ? (
                 <button
+                  type="button"
                   onClick={link.onClick}
                   className="w-full py-2.5 rounded-xl bg-dark-bg border border-white/5 text-xs text-dark-text-secondary hover:text-white hover:border-zinc-500 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                 >
@@ -131,12 +137,16 @@ export default function Contact() {
                       </motion.span>
                     )}
                   </AnimatePresence>
+                  <span role="status" aria-live="polite" className="sr-only">
+                    {copied ? "Email address copied to clipboard" : ""}
+                  </span>
                 </button>
               ) : (
                 <a
                   href={link.href}
-                  target="_blank"
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
                   rel="noopener noreferrer"
+                  aria-label={link.href.startsWith("tel:") ? `Call ${link.value}` : `Visit ${link.label} (opens in a new tab)`}
                   className="w-full py-2.5 rounded-xl bg-dark-bg border border-white/5 text-xs text-dark-text-secondary hover:text-white hover:border-zinc-500 transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center"
                 >
                   Visit Link
