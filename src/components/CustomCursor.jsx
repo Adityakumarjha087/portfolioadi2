@@ -16,7 +16,7 @@ export default function CustomCursor() {
 
   useEffect(() => {
     // Check if device supports hover (typically desktop)
-    const mediaQuery = window.matchMedia("(any-hover: hover)");
+    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
     const handleMediaChange = (e) => {
       setIsMobile(!e.matches);
     };
@@ -63,12 +63,12 @@ export default function CustomCursor() {
     <>
       {/* Central dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-50 mix-blend-screen -translate-x-1/2 -translate-y-1/2"
-        style={{ x: cursorXSpring, y: cursorYSpring }}
+        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-white pointer-events-none z-[80] mix-blend-screen -translate-x-1/2 -translate-y-1/2"
+        style={{ x: cursorX, y: cursorY }}
       />
       {/* Outer ring */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full border border-white/40 pointer-events-none z-50 mix-blend-screen -translate-x-1/2 -translate-y-1/2"
+        className="fixed top-0 left-0 rounded-full border border-white/40 pointer-events-none z-[80] mix-blend-screen -translate-x-1/2 -translate-y-1/2"
         style={{ x: cursorXSpring, y: cursorYSpring }}
         animate={{
           width: isHovered ? 40 : 20,

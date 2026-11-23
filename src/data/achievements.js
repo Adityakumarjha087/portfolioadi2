@@ -1,28 +1,24 @@
 export const achievements = {
   stats: [
-    { value: 300, suffix: "+", label: "Problems Solved on LeetCode / GFG" },
-    { value: 7.4, suffix: "", label: "Engineering CGPA at NIET" },
-    { value: 100, suffix: "%", label: "Remote Deployment Uptime" },
-    { value: 3, suffix: "+", label: "Major Full-Stack Projects Built" }
+    { value: 200, suffix: "+", label: "DSA problems solved" },
+    { value: 40, prefix: "~", suffix: "%", label: "Less manual review effort at Ethara AI" },
+    { value: 30, prefix: "~", suffix: "%", label: "Better dataset reliability" },
+    { value: 7.5, suffix: "", label: "B.Tech CGPA at NIET" }
   ],
-  awards: [
-    {
-      title: "HackX NIET Platform Orchestrator",
-      issuer: "Noida Institute of Engineering Technology",
-      date: "2025",
-      description: "Designed and engineered the full-stack portal used to manage hackathon sign-ups, team assemblies, and real-time candidate data syncing."
-    },
-    {
-      title: "Active Technical Contributor",
-      issuer: "GeeksforGeeks & LeetCode Profiles",
-      date: "Active",
-      description: "Regular solver of data structures and algorithmic challenges, maintaining consistent profiles on GeeksforGeeks and LeetCode."
-    },
-    {
-      title: "B.Tech Computer Science Candidate",
-      issuer: "NIET",
-      date: "2022 - Present",
-      description: "Pursuing a B.Tech in CSE, maintaining a solid 7.4 CGPA while actively building software projects and data pipelines."
-    }
+  education: {
+    degree: "B.Tech in Computer Science and Engineering",
+    school: "Noida Institute of Engineering and Technology, Greater Noida",
+    duration: "2022 – 2026",
+    coursework: ["Data Structures & Algorithms", "OOP", "DBMS", "Operating Systems", "Computer Networks"]
+  },
+  certifications: [
+    { title: "Postman API Fundamentals", issuer: "Postman" },
+    { title: "Java Programming", issuer: "Coursera" },
+    { title: "Python Basics", issuer: "HackerRank" },
+    { title: "Problem Solving", issuer: "HackerRank" }
+  ],
+  leadership: [
+    { title: "Director of Event Management", org: "GDG NIET" },
+    { title: "Vice President", org: "Ekume Club, NIET" }
   ]
 };

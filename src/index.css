@@ -1,96 +1,129 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
 @import "tailwindcss";
 
 @theme {
   --font-sans: 'Outfit', system-ui, sans-serif;
   --font-display: 'Space Grotesk', system-ui, sans-serif;
-  
+
   --color-dark-bg: #000000;
   --color-dark-surface: #0a0a0a;
   --color-dark-border: #1a1a1a;
   --color-dark-text-primary: #ffffff;
   --color-dark-text-secondary: #a1a1aa;
-  
-  --color-brand-purple: #ffffff;
-  --color-brand-blue: #e4e4e7;
-  --color-brand-accent: #71717a;
 }
 
-/* Custom global styles */
 html {
   scroll-behavior: smooth;
-  background-color: #000000;
+  background-color: #000;
+  color-scheme: dark;
 }
 
 body {
-  background-color: #000000;
+  background-color: #000;
   color: var(--color-dark-text-primary);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow-x: clip;
   margin: 0;
-  padding: 0;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
+section[id] { scroll-margin-top: 4.5rem; }
+
+::selection { background: rgba(255, 255, 255, 0.22); color: #fff; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #52525b; }
+
+*:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+.glass-panel { background: #0a0a0a; border: 1px solid #1c1c1f; }
+
+/* Cards lit from the pointer position; --mx / --my come from SpotlightCard. */
+.spotlight { position: relative; isolation: isolate; transition: border-color 0.3s; }
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.1), transparent 65%);
 }
-::-webkit-scrollbar-track {
-  background: #000000;
+.spotlight:hover::before, .spotlight:focus-within::before { opacity: 1; }
+.spotlight:hover, .spotlight:focus-within { border-color: #3f3f46; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.25s, border-color 0.25s, color 0.25s, transform 0.2s;
 }
-::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 2px;
+.btn:active { transform: scale(0.97); }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.82rem; }
+.btn-primary { background: #fff; color: #000; border: 1px solid #fff; }
+.btn-primary:hover { background: #d4d4d8; border-color: #d4d4d8; }
+.btn-ghost { background: rgba(9, 9, 11, 0.6); color: #fff; border: 1px solid #2e2e33; }
+.btn-ghost:hover { border-color: #a1a1aa; background: #18181b; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.field {
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid #27272a;
+  background: #050505;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  color: #fff;
+  transition: border-color 0.2s, background-color 0.2s;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+.field::placeholder { color: #71717a; }
+.field:hover { border-color: #3f3f46; }
+.field:focus { border-color: #fff; background: #0c0c0d; outline: none; }
+.field[aria-invalid="true"] { border-color: #f87171; }
+
+/* Covers: greyscale at rest, full colour on hover or keyboard focus. */
+.cover-img { filter: grayscale(1) brightness(0.6) contrast(1.05); transition: filter 0.6s, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.group:hover .cover-img, .group:focus-within .cover-img { filter: none; transform: scale(1.035); }
+@media (hover: none) { .cover-img { filter: grayscale(0.25) brightness(0.9); } }
+
+.grid-bg {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-/* Premium Minimalist Panels (pure dark surface, no heavy blurs that lag scroll) */
-.glass-panel {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
+.flow { stroke-dasharray: 4 7; animation: flow 1.6s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -22; } }
+
+.marquee { mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.marquee-track { display: flex; width: max-content; animation: marquee 38s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+.live-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
+.live-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: #34d399; animation: ping 2s ease-out infinite; }
+@keyframes ping { to { transform: scale(2.6); opacity: 0; } }
+
+/* Featured projects stack on large, tall screens; elsewhere they flow. */
+.stack-item { margin-bottom: 1.5rem; }
+@media (min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
+  .stack-item { position: sticky; margin-bottom: 3rem; }
 }
 
-.glass-panel-hover:hover {
-  border-color: #3f3f46;
-  background: #0e0e0e;
-}
-
-/* Custom Floating Animation */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-/* Hide scrollbars for sliders */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Custom focus indicator */
-*:focus-visible {
-  outline: 1px solid #ffffff;
-  outline-offset: 3px;
-}
-
-/* Accessibility: prefers-reduced-motion config */
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-delay: 0s !important;
-    animation-duration: 0s !important;
-    animation-iteration-count: 1 !important;
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation: none !important;
     transition-duration: 0s !important;
-    scroll-behavior: auto !important;
   }
 }

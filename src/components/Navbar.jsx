@@ -1,46 +1,33 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
+import { navItems, profile, resumes } from "../data/site";
+import ResumeMenu from "./ResumeMenu";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-
-  const navItems = [
-    { label: "About", id: "about" },
-    { label: "Experience", id: "experience" },
-    { label: "Projects", id: "projects" },
-    { label: "Skills", id: "skills" },
-    { label: "Contact", id: "contact" }
-  ];
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, restDelta: 0.001 });
 
   useEffect(() => {
+    const ids = ["hero", ...navItems.map((n) => n.id)];
     const handleScroll = () => {
-      // Background scroll check
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
+      setScrolled(window.scrollY > 40);
+      // Last section whose top has passed the upper third of the viewport.
+      const line = window.innerHeight * 0.35;
+      let current = "hero";
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= line) current = id;
       }
-
-      // Active Section tracker
-      const sections = ["hero", "about", "experience", "projects", "skills", "contact"];
-      const scrollPos = window.scrollY + 200;
-
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetHeight = element.offsetHeight;
-          if (scrollPos >= offsetTop && scrollPos < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            break;
-          }
-        }
+      // A short final section may never reach that line.
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+        current = ids[ids.length - 1];
       }
+      setActiveSection(current);
     };
-
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -54,80 +41,67 @@ export default function Navbar() {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") setIsOpen(false);
     };
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const onDesktop = (e) => e.matches && setIsOpen(false);
     window.addEventListener("keydown", handleKeyDown);
+    desktop.addEventListener("change", onDesktop);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
+      desktop.removeEventListener("change", onDesktop);
     };
   }, [isOpen]);
 
-  const scrollToSection = (id) => {
-    setIsOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const close = () => setIsOpen(false);
 
   return (
     <>
       <motion.header
-        className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
-          scrolled 
-            ? "bg-dark-bg/75 backdrop-blur-md border-b border-dark-border py-4" 
-            : "bg-transparent py-6"
+        className={`fixed top-0 left-0 w-full z-40 transition-[background-color,padding,border-color] duration-300 border-b ${
+          scrolled || isOpen ? "bg-black/80 backdrop-blur-md border-dark-border py-3" : "bg-transparent border-transparent py-5"
         }`}
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-          {/* Logo / Branding */}
-          <button 
-            onClick={() => scrollToSection("hero")} 
-            className="font-display font-bold text-xl md:text-2xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400 select-none cursor-pointer"
-          >
-            ADITYA JHA
-          </button>
+        <div className="max-w-7xl mx-auto px-5 md:px-12 flex justify-between items-center gap-6">
+          <a href="#hero" onClick={close} className="font-display font-bold text-xl tracking-wide text-white">
+            {profile.shortName}
+          </a>
 
-          {/* Desktop Nav Links */}
-          <nav aria-label="Primary" className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                aria-current={activeSection === item.id ? "true" : undefined}
-                className={`font-sans text-sm tracking-wide transition-colors duration-200 cursor-pointer relative ${
-                  activeSection === item.id 
-                    ? "text-white" 
-                    : "text-dark-text-secondary hover:text-dark-text-primary"
-                }`}
-              >
-                {item.label}
-                {activeSection === item.id && (
-                  <motion.span
-                    className="absolute -bottom-1.5 left-0 w-full h-[2px] bg-white"
-                    layoutId="activeIndicator"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-              </button>
-            ))}
+          <nav aria-label="Primary" className="hidden lg:flex items-center gap-1">
+            {navItems.map((item) => {
+              const active = activeSection === item.id;
+              return (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  aria-current={active ? "true" : undefined}
+                  className={`relative px-4 py-2 rounded-full text-sm transition-colors duration-200 ${
+                    active ? "text-black" : "text-dark-text-secondary hover:text-white"
+                  }`}
+                >
+                  {active && (
+                    <motion.span
+                      className="absolute inset-0 rounded-full bg-white"
+                      layoutId="activeNav"
+                      transition={{ type: "spring", stiffness: 320, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative">{item.label}</span>
+                </a>
+              );
+            })}
           </nav>
 
-          {/* Let's Talk CTA (Desktop) */}
-          <button
-            onClick={() => scrollToSection("contact")}
-            className="hidden md:flex items-center gap-1.5 px-5 py-2 rounded-full border border-zinc-800 text-sm font-medium tracking-wide bg-zinc-950/40 hover:border-zinc-500 text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-          >
-            Let's Talk
-            <ArrowUpRight className="w-4 h-4" />
-          </button>
+          <div className="hidden lg:block">
+            <ResumeMenu className="btn btn-ghost btn-sm" align="right" />
+          </div>
 
-          {/* Hamburger Icon (Mobile) */}
           <button
+            type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-dark-text-primary hover:text-white transition-colors cursor-pointer"
+            className="lg:hidden p-2 -mr-2 text-white cursor-pointer"
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
@@ -135,43 +109,42 @@ export default function Navbar() {
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
+        <motion.div className="absolute bottom-[-1px] left-0 h-px w-full bg-white origin-left" style={{ scaleX: progress }} />
       </motion.header>
 
-      {/* Animated Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             id="mobile-menu"
-            className="fixed inset-0 z-30 bg-dark-bg/95 flex flex-col justify-center items-center md:hidden"
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
+            className="fixed inset-0 z-30 bg-black lg:hidden overflow-y-auto"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.25 }}
           >
-            <div className="flex flex-col gap-8 text-center">
+            <nav aria-label="Mobile" className="min-h-full flex flex-col justify-center gap-1 px-6 pt-24 pb-10">
               {navItems.map((item, idx) => (
-                <motion.button
+                <motion.a
                   key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className="font-display font-semibold text-2xl tracking-wide text-dark-text-secondary hover:text-white transition-colors cursor-pointer"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.08 }}
+                  href={`#${item.id}`}
+                  onClick={close}
+                  className="font-display font-semibold text-4xl py-2.5 text-zinc-300 hover:text-white"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.05 + idx * 0.05 }}
                 >
                   {item.label}
-                </motion.button>
+                </motion.a>
               ))}
-              
-              <motion.button
-                onClick={() => scrollToSection("contact")}
-                className="mt-4 px-8 py-3 rounded-full bg-white text-black font-sans text-sm font-semibold tracking-wider cursor-pointer hover:bg-zinc-200 transition-colors"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: navItems.length * 0.08 }}
-              >
-                Let's Talk
-              </motion.button>
-            </div>
+              <div className="mt-6 pt-6 border-t border-zinc-800 flex flex-col gap-3">
+                {resumes.map((r) => (
+                  <a key={r.id} href={r.href} target="_blank" rel="noopener noreferrer" onClick={close} className="flex items-center justify-between text-zinc-300 py-1.5">
+                    {r.title} resume
+                    <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>

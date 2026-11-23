@@ -1,109 +1,89 @@
-import { useEffect, useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { animate, useInView, useReducedMotion } from "framer-motion";
+import { Award, GraduationCap, Users } from "lucide-react";
 import { achievements } from "../data/achievements";
-import { Award, ShieldCheck, Trophy, Sparkles } from "lucide-react";
+import { Reveal, SectionHeading, SpotlightCard } from "../components/Motion";
 
-// Count-up hook
-function AnimatedCounter({ value, suffix, duration = 1.5 }) {
-  const [count, setCount] = useState(0);
-  const elementRef = useRef(null);
-  const isInView = useInView(elementRef, { once: true, margin: "-50px" });
+function Counter({ value, prefix = "", suffix = "" }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" });
+  const reduced = useReducedMotion();
+  const decimals = Number.isInteger(value) ? 0 : 1;
 
   useEffect(() => {
-    if (!isInView) return;
-
-    let startTime = null;
-    const endValue = value;
-    const isDecimal = !Number.isInteger(value);
-
-    const animateCount = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      
-      // easeOutExpo function
-      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      const currentVal = ease * endValue;
-      
-      setCount(isDecimal ? parseFloat(currentVal.toFixed(2)) : Math.floor(currentVal));
-
-      if (progress < 1) {
-        requestAnimationFrame(animateCount);
-      }
-    };
-
-    requestAnimationFrame(animateCount);
-  }, [isInView, value, duration]);
+    if (!inView || reduced) return;
+    const controls = animate(0, value, {
+      duration: 1.6,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => {
+        if (ref.current) ref.current.textContent = v.toFixed(decimals);
+      },
+    });
+    return () => controls.stop();
+  }, [inView, reduced, value, decimals]);
 
   return (
-    <span ref={elementRef} className="font-display font-bold text-4xl md:text-6xl text-white tracking-tight">
-      {count}
-      <span className="text-zinc-500">{suffix}</span>
+    <span className="font-display font-bold text-5xl md:text-6xl text-white tabular-nums">
+      {prefix && <span className="text-zinc-500">{prefix}</span>}
+      <span ref={ref}>{value.toFixed(decimals)}</span>
+      {suffix && <span className="text-zinc-500">{suffix}</span>}
     </span>
   );
 }
 
 export default function Achievements() {
-  const iconMap = {
-    "AWS Certified Developer – Associate": <ShieldCheck className="w-6 h-6 text-white" />,
-    "Smart India Hackathon Winner": <Trophy className="w-6 h-6 text-zinc-400" />,
-    "Cognizant Spot Award": <Sparkles className="w-6 h-6 text-zinc-500" />
-  };
-
+  const { stats, education, certifications, leadership } = achievements;
   return (
-    <section id="achievements" className="py-24 px-6 md:px-12 max-w-7xl mx-auto border-t border-dark-border relative">
-      <div className="flex flex-col items-center mb-16 text-center">
-        <span className="font-mono text-xs text-zinc-500 tracking-widest uppercase">// verified milestones</span>
-        <h2 className="font-display font-bold text-3xl md:text-5xl text-white mt-1">
-          Milestones & Awards
-        </h2>
-      </div>
+    <section id="achievements" className="py-24 md:py-32 px-5 md:px-12 max-w-7xl mx-auto">
+      <SectionHeading title="Education and milestones" />
 
-      {/* Grid of Counters (Numeric Stats) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-        {achievements.stats.map((stat, idx) => (
-          <div 
-            key={idx}
-            className="p-6 rounded-2xl glass-panel border border-white/5 flex flex-col items-center gap-2"
-          >
-            <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-            <span className="font-mono text-[10px] md:text-xs text-dark-text-secondary tracking-widest uppercase text-center mt-1">
-              {stat.label}
-            </span>
+      <dl className="grid grid-cols-2 lg:grid-cols-4 border border-dark-border rounded-2xl overflow-hidden gap-px bg-dark-border mb-4">
+        {stats.map((s) => (
+          <div key={s.label} className="bg-black p-6 md:p-8 flex flex-col-reverse justify-end gap-3">
+            <dt className="text-sm text-dark-text-secondary leading-snug">{s.label}</dt>
+            <dd><Counter {...s} /></dd>
           </div>
         ))}
-      </div>
+      </dl>
 
-      {/* Cards of Awards & Certifications */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
-        {achievements.awards.map((award, idx) => (
-          <motion.div
-            key={idx}
-            className="p-8 rounded-2xl glass-panel border border-white/5 flex flex-col gap-5 justify-between relative overflow-hidden group"
-            whileHover={{ y: -6, borderColor: "#3f3f46" }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full -mr-8 -mt-8 pointer-events-none" />
-
-            <div className="flex flex-col gap-4">
-              <div className="w-12 h-12 rounded-xl bg-dark-bg/85 border border-white/5 flex items-center justify-center">
-                {iconMap[award.title] || <Award className="w-6 h-6 text-zinc-400" />}
-              </div>
-              
-              <div>
-                <span className="font-mono text-[9px] text-zinc-400 tracking-widest uppercase font-semibold">
-                  {award.issuer} • {award.date}
-                </span>
-                <h3 className="font-display font-bold text-lg text-white group-hover:text-white transition-colors mt-1 tracking-wide">
-                  {award.title}
-                </h3>
-              </div>
-
-              <p className="font-sans text-xs md:text-sm text-dark-text-secondary leading-relaxed mt-1">
-                {award.description}
-              </p>
-            </div>
-          </motion.div>
-        ))}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <Reveal>
+          <SpotlightCard className="h-full p-7 rounded-2xl">
+            <GraduationCap className="w-6 h-6 text-white mb-4" aria-hidden="true" />
+            <h3 className="font-display text-lg font-semibold text-white">{education.degree}</h3>
+            <p className="text-sm text-zinc-300 mt-2">{education.school}</p>
+            <p className="text-sm text-zinc-500 mt-1">{education.duration}</p>
+            <p className="text-sm text-dark-text-secondary mt-4 leading-relaxed">{education.coursework.join(", ")}</p>
+          </SpotlightCard>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <SpotlightCard className="h-full p-7 rounded-2xl">
+            <Award className="w-6 h-6 text-white mb-4" aria-hidden="true" />
+            <h3 className="font-display text-lg font-semibold text-white mb-3">Certifications</h3>
+            <ul className="flex flex-col divide-y divide-zinc-900">
+              {certifications.map((c) => (
+                <li key={c.title} className="py-2.5 flex justify-between gap-4 text-sm">
+                  <span className="text-zinc-200">{c.title}</span>
+                  <span className="text-zinc-500">{c.issuer}</span>
+                </li>
+              ))}
+            </ul>
+          </SpotlightCard>
+        </Reveal>
+        <Reveal delay={0.16}>
+          <SpotlightCard className="h-full p-7 rounded-2xl">
+            <Users className="w-6 h-6 text-white mb-4" aria-hidden="true" />
+            <h3 className="font-display text-lg font-semibold text-white mb-3">Leadership</h3>
+            <ul className="flex flex-col divide-y divide-zinc-900">
+              {leadership.map((l) => (
+                <li key={l.title} className="py-2.5 text-sm">
+                  <span className="block text-zinc-200">{l.title}</span>
+                  <span className="block text-zinc-500 mt-0.5">{l.org}</span>
+                </li>
+              ))}
+            </ul>
+          </SpotlightCard>
+        </Reveal>
       </div>
     </section>
   );

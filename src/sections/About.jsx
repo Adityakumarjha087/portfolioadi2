@@ -1,127 +1,97 @@
-import { useState, useRef } from "react";
-import { motion } from "framer-motion";
-import { GraduationCap, Compass, Layers } from "lucide-react";
+import { useRef } from "react";
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { Brain, Layers, ShieldCheck } from "lucide-react";
+import { Reveal, SectionHeading, SpotlightCard } from "../components/Motion";
 
-export default function About() {
-  const avatarRef = useRef(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+const statement =
+  "I sit between model training and product engineering. At Ethara AI I work on RL and SFT projects for state-of-the-art LLMs: building training data, testing outputs and catching hallucinations. On my own time I ship the other half, from React front ends to the APIs, retrieval and agents behind them.";
 
-  const handleMouseMove = (e) => {
-    if (!avatarRef.current) return;
-    const rect = avatarRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    
-    // Normalized mouse position inside the element (from -0.5 to 0.5)
-    const mouseX = (e.clientX - rect.left) / width - 0.5;
-    const mouseY = (e.clientY - rect.top) / height - 0.5;
-    
-    // Maximum tilt angles in degrees
-    const maxTiltX = 12;
-    const maxTiltY = 12;
-    
-    setTilt({
-      x: -mouseY * maxTiltX, // tilt based on y movement
-      y: mouseX * maxTiltY   // tilt based on x movement
-    });
+// Words brighten as the paragraph is scrolled through.
+function Word({ children, progress, range }) {
+  const opacity = useTransform(progress, range, [0.22, 1]);
+  return (
+    <motion.span style={{ opacity }} className="inline-block mr-[0.26em]">
+      {children}
+    </motion.span>
+  );
+}
+
+function Statement() {
+  const ref = useRef(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.55"] });
+  const words = statement.split(" ");
+  const className = "font-display text-2xl md:text-[2rem] leading-snug text-white";
+
+  if (reduced) return <p className={className}>{statement}</p>;
+  return (
+    <p ref={ref} className={className}>
+      <span className="sr-only">{statement}</span>
+      <span aria-hidden="true">
+        {words.map((w, i) => (
+          <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
+            {w}
+          </Word>
+        ))}
+      </span>
+    </p>
+  );
+}
+
+function Avatar() {
+  const reduced = useReducedMotion();
+  const rx = useSpring(useMotionValue(0), { stiffness: 160, damping: 18 });
+  const ry = useSpring(useMotionValue(0), { stiffness: 160, damping: 18 });
+
+  const onMove = (e) => {
+    if (reduced || e.pointerType !== "mouse") return;
+    const r = e.currentTarget.getBoundingClientRect();
+    ry.set(((e.clientX - r.left) / r.width - 0.5) * 16);
+    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 16);
   };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
+  const reset = () => {
+    rx.set(0);
+    ry.set(0);
   };
-
-  const cards = [
-    {
-      icon: <GraduationCap className="w-5 h-5 text-white" />,
-      title: "Education",
-      desc: "B.Tech CSE candidate at Noida Institute of Engineering Technology (CGPA: 7.4)"
-    },
-    {
-      icon: <Compass className="w-5 h-5 text-zinc-400" />,
-      title: "Interests",
-      desc: "LLM Pipelines, SaaS Automation, Full-Stack Architecture"
-    },
-    {
-      icon: <Layers className="w-5 h-5 text-zinc-500" />,
-      title: "Skills Focus",
-      desc: "React.js/Next.js, Node.js/Express, Python, Databases & Git"
-    }
-  ];
 
   return (
-    <section id="about" className="py-24 px-6 md:px-12 max-w-7xl mx-auto border-t border-dark-border relative">
+    <div onPointerMove={onMove} onPointerLeave={reset} style={{ perspective: 1000 }} className="w-full max-w-sm mx-auto">
+      <motion.div style={{ rotateX: rx, rotateY: ry }} className="aspect-square rounded-3xl glass-panel overflow-hidden p-3">
+        <img src="/avatar.svg" alt="" width="400" height="400" className="w-full h-full object-contain" />
+      </motion.div>
+    </div>
+  );
+}
+
+const focus = [
+  { icon: Brain, title: "LLM training and evaluation", desc: "RL and SFT projects, training data quality, prompt-based testing and hallucination detection." },
+  { icon: Layers, title: "Full-stack delivery", desc: "Next.js and React front ends with Node.js, Express and FastAPI services, deployed on Vercel and Render." },
+  { icon: ShieldCheck, title: "Designed for failure", desc: "Retries, timeouts, step limits, request tracing, input validation and human approval where it matters." },
+];
+
+export default function About() {
+  return (
+    <section id="about" className="py-24 md:py-32 px-5 md:px-12 max-w-7xl mx-auto">
+      <SectionHeading title="About me" />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-        
-        {/* Left Side: Photo/Avatar with 3D Tilt */}
-        <div className="lg:col-span-5 flex justify-center">
-          <div
-            ref={avatarRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            className="relative w-72 h-72 md:w-96 md:h-96 rounded-2xl glass-panel border border-zinc-800 hover:border-zinc-500 overflow-hidden flex items-center justify-center p-3 select-none transition-all duration-150 ease-out cursor-pointer"
-            style={{
-              transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-              transformStyle: "preserve-3d"
-            }}
-          >
-            {/* Glossy overlay sheen */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-20 bg-gradient-to-tr from-transparent via-white to-transparent"
-              style={{
-                transform: `translateZ(20px) translate(${tilt.y * 2}px, ${-tilt.x * 2}px)`
-              }}
-            />
-            {/* The SVG Avatar Image */}
-            <img 
-              src="/avatar.svg" 
-              alt="Aditya Kumar Jha Cyber Avatar" 
-              className="w-full h-full object-contain rounded-xl select-none pointer-events-none"
-              style={{
-                transform: "translateZ(30px)",
-                transformStyle: "preserve-3d"
-              }}
-            />
-          </div>
+        <div className="lg:col-span-8">
+          <Statement />
         </div>
+        <Reveal className="lg:col-span-4" delay={0.1}>
+          <Avatar />
+        </Reveal>
+      </div>
 
-        {/* Right Side: Information */}
-        <div className="lg:col-span-7 flex flex-col gap-6 text-left">
-          <div>
-            <span className="font-mono text-xs text-zinc-500 tracking-widest uppercase">// introduction</span>
-            <h2 className="font-display font-bold text-3xl md:text-5xl text-white mt-1">
-              About Me
-            </h2>
-          </div>
-
-          <p className="font-sans text-sm md:text-base text-dark-text-secondary leading-relaxed">
-            I am a Full-Stack Developer and LLM Data Trainer currently pursuing my B.Tech in Computer Science & Engineering at Noida Institute of Engineering Technology (NIET). With hands-on internship experience training large language model pipelines, optimizing response validations, and building modular SaaS automated interfaces, I aim to write clean, maintainable, and high-performance code.
-          </p>
-
-          <p className="font-sans text-sm md:text-base text-dark-text-secondary leading-relaxed">
-            From conducting LLM evaluations to structuring reactive React layouts, I bridge the gap between AI data science structures and frontend user experiences.
-          </p>
-
-          {/* Quick cards info */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            {cards.map((card, idx) => (
-              <motion.div
-                key={idx}
-                className="p-5 rounded-xl glass-panel border border-white/5 flex flex-col gap-3"
-                whileHover={{ y: -5, borderColor: "#3f3f46" }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="w-10 h-10 rounded-lg bg-dark-bg/85 flex items-center justify-center border border-white/5">
-                  {card.icon}
-                </div>
-                <div>
-                  <h3 className="font-display text-sm font-semibold text-white tracking-wide">{card.title}</h3>
-                  <p className="font-sans text-xs text-dark-text-secondary mt-1 leading-normal">{card.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-        
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
+        {focus.map(({ icon: Icon, title, desc }, i) => (
+          <Reveal key={title} delay={i * 0.1}>
+            <SpotlightCard className="h-full p-7 rounded-2xl flex flex-col gap-4">
+              <Icon className="w-6 h-6 text-white" aria-hidden="true" />
+              <h3 className="font-display text-lg font-semibold text-white">{title}</h3>
+              <p className="text-sm text-dark-text-secondary leading-relaxed">{desc}</p>
+            </SpotlightCard>
+          </Reveal>
+        ))}
       </div>
     </section>
   );

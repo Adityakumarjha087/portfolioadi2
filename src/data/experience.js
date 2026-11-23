@@ -1,30 +1,40 @@
 export const experiences = [
   {
     company: "Ethara AI",
-    role: "Post LLM Trainer Intern (LLM/Data Intern)",
-    duration: "Jan 2026 - Present",
-    location: "Gurugram, Haryana",
-    description: "Build LLM validation and training data pipelines. Oversee data preprocessing, response evaluation, and prompt optimization to ensure high response accuracy and limit hallucinations.",
-    technologies: ["LLM Ingestion", "Prompt Engineering", "JSON/CSV Data Pipelines", "SFT", "Data Annotation"],
+    role: "Software Engineer",
+    duration: "Jul 2026 – Present",
+    location: "Gurugram",
+    current: true,
     achievements: [
-      "Worked on LLM data pipelines including preprocessing, annotation, and validation of structured datasets (JSON/CSV).",
-      "Performed quality evaluation of AI-generated responses to improve accuracy, consistency, and reduce hallucinations.",
-      "Designed prompt testing strategies to evaluate model behavior on edge cases and ambiguous queries.",
-      "Automated repetitive data validation tasks, improving efficiency and reducing manual effort."
-    ]
+      "Work on reinforcement learning (RL) and supervised fine-tuning (SFT) projects for multiple state-of-the-art large language models.",
+      "Build and review training datasets with validation rules and quality checks to keep them accurate and consistent.",
+      "Test and validate outputs of large-scale AI systems with structured test cases and edge-case validation; detect, log and escalate response errors and hallucinations.",
+      "Evaluate system performance against quality metrics and document findings and trade-offs for the team."
+    ],
+    technologies: ["RL", "SFT", "LLM evaluation", "Dataset QA", "Python", "Edge-case testing"]
+  },
+  {
+    company: "Ethara AI",
+    role: "Post LLM Trainer Intern",
+    duration: "Jan 2026 – Jun 2026",
+    location: "Gurugram",
+    achievements: [
+      "Curated, preprocessed and validated datasets for LLM training pipelines, running quality checks before data reached training.",
+      "Automated data validation workflows in Python, reducing manual review effort by ~40%.",
+      "Optimized the structure and cleaning of JSON and CSV datasets, improving data reliability by ~30%."
+    ],
+    technologies: ["Python", "Data validation", "JSON / CSV pipelines", "LLM training data"]
   },
   {
     company: "Celebal Technologies",
     role: "Frontend Developer Intern",
-    duration: "Jun 2025 - Aug 2025",
+    duration: "Jun 2025 – Aug 2025",
     location: "Remote",
-    description: "Developed and maintained clean client interfaces using React.js and TypeScript. Handled API integrations and state management to optimize app loading and rendering speeds.",
-    technologies: ["React.js", "TypeScript", "Redux", "REST APIs", "Tailwind CSS"],
     achievements: [
-      "Developed scalable and reusable UI components using React.js and TypeScript.",
-      "Integrated REST APIs to build dynamic, data-driven interfaces with real-time updates.",
-      "Optimized application performance using efficient state management (Redux).",
-      "Refactored existing codebases to improve maintainability and readability."
-    ]
+      "Built reusable UI components with React.js and TypeScript.",
+      "Integrated REST APIs into dynamic, data-driven interfaces.",
+      "Managed application state with Redux and refactored existing code for readability."
+    ],
+    technologies: ["React.js", "TypeScript", "Redux", "REST APIs", "Tailwind CSS"]
   }
 ];

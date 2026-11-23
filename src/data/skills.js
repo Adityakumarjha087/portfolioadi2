@@ -1,26 +1,25 @@
+// Merged from both resumes.
 export const skillCategories = [
   {
-    name: "Languages",
-    skills: ["Java", "Python", "JavaScript", "TypeScript", "PHP", "SQL"]
+    name: "GenAI & LLM",
+    wide: true,
+    skills: ["Reinforcement learning (RL)", "Supervised fine-tuning (SFT)", "Model evaluation", "RAG", "RAGAS", "Multi-agent systems", "LangGraph", "MCP", "Prompt design", "Groq API", "Llama 3.1", "Training data curation"]
+  },
+  { name: "Languages", skills: ["TypeScript", "JavaScript", "Python", "Java", "SQL"] },
+  { name: "Frontend", skills: ["Next.js", "React", "Tailwind CSS", "Framer Motion", "Redux (basics)", "HTML5", "CSS3"] },
+  {
+    name: "Backend & APIs",
+    wide: true,
+    skills: ["Node.js", "Express.js", "FastAPI", "Spring Boot", "REST API design", "JWT auth", "PayPal API", "LLM API integration"]
   },
   {
-    name: "Frontend",
-    skills: ["React.js", "Next.js", "HTML", "CSS", "Redux", "Tailwind CSS"]
+    name: "Testing & Reliability",
+    wide: true,
+    skills: ["Test case design", "Edge-case validation", "Postman", "Code reviews", "Retries and timeouts", "Request tracing", "RCA"]
   },
-  {
-    name: "Backend",
-    skills: ["Node.js", "Express.js", "Spring Boot", "REST APIs"]
-  },
-  {
-    name: "Databases",
-    skills: ["MongoDB", "MySQL"]
-  },
-  {
-    name: "Tools & Cloud",
-    skills: ["Git", "GitHub", "Docker", "Postman", "Vercel", "AWS EC2"]
-  },
-  {
-    name: "AI & ML",
-    skills: ["Supervised Fine-Tuning (SFT)", "KNN", "CNN", "LLM Testing", "Prompt Engineering"]
-  }
+  { name: "Databases", skills: ["PostgreSQL", "MySQL", "MongoDB", "SQLite", "Firestore", "Qdrant"] },
+  { name: "DevOps & Tools", skills: ["Git", "GitHub", "Docker", "Vercel", "Render", "AWS EC2 (basics)", "Langfuse", "Agile"] },
+  { name: "Security", wide: true, skills: ["bcrypt hashing", "JWT", "Server-side input validation", "Secrets in environment variables"] }
 ];
+
+export const marquee = ["TypeScript", "Next.js", "React", "Node.js", "Python", "FastAPI", "PostgreSQL", "LangGraph", "MCP", "Qdrant", "Docker", "RAGAS", "Express.js", "Tailwind CSS", "MongoDB", "Langfuse"];
