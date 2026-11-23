@@ -279,14 +279,15 @@ export const projects = [
     title: "Shopkart Storefront",
     kind: "E-commerce frontend",
     category: "Frontend",
-    description: "Store with product catalog, search and filtering, cart and checkout, plus light and dark themes.",
+    description: "Colour-block store for clothing, jewellery and electronics with filters, search, saved items, a cart drawer and light and dark themes.",
     features: [
-      "Redux Toolkit for cart and product state.",
-      "Authentication, protected routes and checkout flow.",
-      "React Three Fiber and Framer Motion for visual effects."
+      "Redux Toolkit for cart, saved items and products, kept between visits.",
+      "Filters and search live in the URL, so results can be shared.",
+      "Animated hero, pointer zoom on product photos and a slide-in cart."
     ],
-    technologies: ["React", "Redux Toolkit", "Tailwind CSS", "Three.js"],
+    technologies: ["React", "Redux Toolkit", "Tailwind CSS", "Framer Motion"],
     github: gh("E-Commerce-Website"),
+    demo: "https://e-commerce-website-flax-seven.vercel.app",
     image: shot("storefront")
   },
   {
