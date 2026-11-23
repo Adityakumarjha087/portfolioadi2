@@ -178,7 +178,8 @@ export const projects = [
     ],
     technologies: ["Python", "FastAPI", "pgvector", "Redis", "Next.js", "Docker"],
     github: gh("KnowledgeAI"),
-    diagram: [["Documents"], ["pgvector", "Keyword"], ["Reranker"], ["Streaming"]]
+    demo: "https://knowledge-ai-brown.vercel.app",
+    image: shot("knowledgeai")
   },
   {
     id: "ai-doctor",
