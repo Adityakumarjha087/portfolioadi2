@@ -110,6 +110,23 @@ section[id] { scroll-margin-top: 4.5rem; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
+/* Skill logos: monochrome at rest, brand colour on hover or tap. */
+.skill-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 1rem;
+  border: 1px solid #27272a;
+  background: #000;
+  color: #d4d4d8;
+  transition: color 0.25s, border-color 0.25s, transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.skill-tile.is-active { color: var(--brand); border-color: var(--brand); transform: translateY(-4px) scale(1.06); }
+.marquee-logo { color: #71717a; transition: color 0.3s; }
+.marquee-logo:hover { color: var(--brand); }
+
 .live-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
 .live-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: #34d399; animation: ping 2s ease-out infinite; }
 @keyframes ping { to { transform: scale(2.6); opacity: 0; } }

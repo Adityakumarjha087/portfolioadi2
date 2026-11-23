@@ -22,4 +22,5 @@ export const skillCategories = [
   { name: "Security", wide: true, skills: ["bcrypt hashing", "JWT", "Server-side input validation", "Secrets in environment variables"] }
 ];
 
-export const marquee = ["TypeScript", "Next.js", "React", "Node.js", "Python", "FastAPI", "PostgreSQL", "LangGraph", "MCP", "Qdrant", "Docker", "RAGAS", "Express.js", "Tailwind CSS", "MongoDB", "Langfuse"];
+// Logos in the scrolling strip; each needs a brand mark in brandIcons.js.
+export const marquee = ["TypeScript", "Next.js", "React", "Node.js", "Python", "FastAPI", "PostgreSQL", "LangGraph", "MCP", "Qdrant", "Docker", "Express.js", "Tailwind CSS", "MongoDB", "GitHub", "Postman", "Vercel", "Java"];
