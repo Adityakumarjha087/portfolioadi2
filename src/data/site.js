@@ -1,4 +1,4 @@
-// Single source of truth for identity, links, resume and contact delivery.
+// Single source of truth for identity, links, resume and navigation.
 
 export const profile = {
   name: "Aditya Kumar Jha",
@@ -22,8 +22,3 @@ export const navItems = [
   { label: "Skills", id: "skills" },
   { label: "Contact", id: "contact" },
 ];
-
-// Access key from https://web3forms.com. It is a public identifier and safe to
-// ship in client code. While it is empty the contact form opens a pre-filled
-// email draft instead of sending directly.
-export const web3formsKey = import.meta.env.VITE_WEB3FORMS_KEY ?? "";

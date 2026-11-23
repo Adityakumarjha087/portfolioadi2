@@ -1,12 +1,13 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Check, Copy, Loader2, Send } from "lucide-react";
-import { profile, web3formsKey } from "../data/site";
+import { profile } from "../data/site";
 
-const ENDPOINT = "https://api.web3forms.com/submit";
+// FormSubmit forwards each submission to this address. It must be activated once
+// per address and site, from the email FormSubmit sends on the first submission.
+const ENDPOINT = `https://formsubmit.co/ajax/${profile.email}`;
 const TOPICS = ["Full-time role", "Freelance project", "Collaboration", "Just saying hi"];
 const EMPTY = { name: "", email: "", topic: TOPICS[0], message: "" };
-const canSend = Boolean(web3formsKey);
 
 function validate(v) {
   const errors = {};
@@ -31,17 +32,17 @@ function drafts(v) {
 
 async function deliver(v) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
+  const timer = setTimeout(() => controller.abort(), 20000);
   try {
     // FormData keeps this a simple CORS request, so no preflight is needed.
     const body = new FormData();
-    body.append("access_key", web3formsKey);
-    body.append("subject", drafts(v).subject);
-    body.append("from_name", "Portfolio contact form");
     body.append("name", v.name.trim());
     body.append("email", v.email.trim());
     body.append("topic", v.topic);
     body.append("message", v.message.trim());
+    body.append("_subject", drafts(v).subject);
+    body.append("_template", "table");
+    body.append("_captcha", "false");
     const res = await fetch(ENDPOINT, {
       method: "POST",
       headers: { Accept: "application/json" },
@@ -49,7 +50,8 @@ async function deliver(v) {
       body,
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.success) throw new Error(data.message || `Request failed (${res.status})`);
+    // FormSubmit reports success as the string "true" or "false".
+    if (!res.ok || String(data.success) !== "true") throw new Error(data.message || `Request failed (${res.status})`);
   } finally {
     clearTimeout(timer);
   }
@@ -94,7 +96,7 @@ function DraftOptions({ values }) {
 export default function ContactForm() {
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
-  // idle | sending | sent | draft | error
+  // idle | sending | sent | error
   const [status, setStatus] = useState("idle");
   const formRef = useRef(null);
   const trapRef = useRef(null);
@@ -116,19 +118,6 @@ export default function ContactForm() {
     }
     // Hidden field only bots fill in.
     if (trapRef.current.value) return;
-
-    if (!canSend) {
-      const d = drafts(values);
-      const touch = window.matchMedia("(pointer: coarse)").matches;
-      if (touch) {
-        window.location.href = d.mailto;
-      } else {
-        const tab = window.open(d.gmail, "_blank");
-        if (tab) tab.opener = null;
-      }
-      setStatus("draft");
-      return;
-    }
 
     setStatus("sending");
     try {
@@ -218,25 +207,23 @@ export default function ContactForm() {
           </>
         ) : (
           <>
-            {canSend ? "Send message" : "Continue to email"} <Send className="w-4 h-4" aria-hidden="true" />
+            Send message <Send className="w-4 h-4" aria-hidden="true" />
           </>
         )}
       </button>
 
       <div role="status" aria-live="polite">
         <AnimatePresence mode="wait">
-          {(status === "draft" || status === "error") && (
+          {status === "error" && (
             <motion.div
-              key={status}
+              key="error"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               className="p-5 rounded-2xl border border-zinc-800 bg-black"
             >
               <p className="text-sm text-zinc-200 leading-relaxed">
-                {status === "draft"
-                  ? "Your email is drafted. Press Send in your mail window to finish. If nothing opened, use one of these:"
-                  : "The message could not be sent. Nothing you typed is lost; try again or use one of these:"}
+                The message could not be sent. Nothing you typed is lost; try again or use one of these:
               </p>
               <DraftOptions values={values} />
             </motion.div>
