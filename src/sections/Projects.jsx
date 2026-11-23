@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "../data/projects";
 import ProjectCard from "../components/ProjectCard";
@@ -7,6 +7,19 @@ import ProjectModal from "../components/ProjectModal";
 export default function Projects() {
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [activeProject, setActiveProject] = useState(null);
+  const triggerRef = useRef(null);
+
+  const openProject = (project) => {
+    triggerRef.current = document.activeElement;
+    setActiveProject(project);
+  };
+
+  const closeProject = () => {
+    setActiveProject(null);
+    // Return focus to the card that opened the modal.
+    triggerRef.current?.focus?.();
+    triggerRef.current = null;
+  };
 
   const filters = ["All", "AI & Data", "Cloud & DevOps", "Frontend & Web"];
 
@@ -41,12 +54,14 @@ export default function Projects() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap justify-center gap-2 mb-12">
+      <div role="group" aria-label="Filter projects by category" className="flex flex-wrap justify-center gap-2 mb-12">
         {filters.map((filter) => {
           const isActive = selectedFilter === filter;
           return (
             <button
               key={filter}
+              type="button"
+              aria-pressed={isActive}
               onClick={() => setSelectedFilter(filter)}
               className={`px-5 py-2 rounded-full font-sans text-xs tracking-wider font-medium transition-all duration-300 relative cursor-pointer border ${
                 isActive 
@@ -84,7 +99,7 @@ export default function Projects() {
             >
               <ProjectCard
                 project={project}
-                onClick={() => setActiveProject(project)}
+                onClick={() => openProject(project)}
               />
             </motion.div>
           ))}
@@ -96,7 +111,7 @@ export default function Projects() {
         {activeProject && (
           <ProjectModal
             project={activeProject}
-            onClose={() => setActiveProject(null)}
+            onClose={closeProject}
           />
         )}
       </AnimatePresence>
