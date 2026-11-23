@@ -33,9 +33,22 @@ export default function ProjectCard({ project, onClick }) {
     setTilt({ x: 0, y: 0 });
   };
 
+  const handleKeyDown = (e) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClick?.();
+    }
+  };
+
   return (
     <motion.div
       ref={cardRef}
+      role="button"
+      tabIndex={0}
+      aria-haspopup="dialog"
+      aria-label={`View details for ${project.title}`}
+      onKeyDown={handleKeyDown}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
