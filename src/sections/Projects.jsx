@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Search } from "lucide-react";
+import { ArrowUpRight, Search, X } from "lucide-react";
 import { categories, projects } from "../data/projects";
 import { profile } from "../data/site";
 import { Reveal, SectionHeading } from "../components/Motion";
@@ -91,8 +91,18 @@ export default function Projects() {
               placeholder="Search by name or tech"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="field !pl-11 !py-2.5 !rounded-full"
+              className="field !pl-11 !pr-10 !py-2.5 !rounded-full"
             />
+            {query && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                onClick={() => setQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
+              </button>
+            )}
           </div>
         </div>
 
