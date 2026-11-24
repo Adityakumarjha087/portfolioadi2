@@ -128,11 +128,20 @@ export default function Navbar() {
                   key={item.id}
                   href={`#${item.id}`}
                   onClick={close}
-                  className="font-display font-semibold text-4xl py-2.5 text-zinc-300 hover:text-white"
+                  aria-current={activeSection === item.id ? "true" : undefined}
+                  className={`flex items-center gap-4 font-display font-semibold text-4xl py-2.5 hover:text-white ${
+                    activeSection === item.id ? "text-white" : "text-zinc-400"
+                  }`}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 + idx * 0.05 }}
                 >
+                  <span
+                    aria-hidden="true"
+                    className={`w-2 h-2 rounded-full shrink-0 transition-colors ${
+                      activeSection === item.id ? "bg-white" : "bg-transparent"
+                    }`}
+                  />
                   {item.label}
                 </motion.a>
               ))}
