@@ -106,7 +106,11 @@ export default function Projects() {
           </div>
         </div>
 
-        <p role="status" className="sr-only">{shown.length} projects shown</p>
+        <p role="status" className={filtering ? "mb-6 text-sm text-zinc-400" : "sr-only"}>
+          {filtering
+            ? `${shown.length} of ${projects.length} projects match`
+            : `${shown.length} projects shown`}
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <AnimatePresence mode="popLayout" initial={false}>
