@@ -7,6 +7,7 @@ import { profile } from "../data/site";
 // per address and site, from the email FormSubmit sends on the first submission.
 const ENDPOINT = `https://formsubmit.co/ajax/${profile.email}`;
 const TOPICS = ["Full-time role", "Freelance project", "Collaboration", "Just saying hi"];
+const MESSAGE_MAX = 1500;
 const EMPTY = { name: "", email: "", topic: TOPICS[0], message: "" };
 
 function validate(v) {
@@ -57,12 +58,15 @@ async function deliver(v) {
   }
 }
 
-function Field({ id, label, error, children }) {
+function Field({ id, label, error, hint, children }) {
   return (
     <div>
       <label htmlFor={id} className="block text-sm text-zinc-300 mb-2">{label}</label>
       {children}
-      {error && <p id={`${id}-error`} className="text-sm text-red-400 mt-1.5">{error}</p>}
+      <div className="flex justify-between gap-4">
+        <div>{error && <p id={`${id}-error`} className="text-sm text-red-400 mt-1.5">{error}</p>}</div>
+        {hint}
+      </div>
     </div>
   );
 }
@@ -194,8 +198,17 @@ export default function ContactForm() {
           <input id="email" name="email" type="email" autoComplete="email" maxLength={200} value={values.email} onChange={set("email")} className="field" {...describe("email")} />
         </Field>
       </div>
-      <Field id="message" label="Message" error={errors.message}>
-        <textarea id="message" name="message" rows={5} maxLength={1500} value={values.message} onChange={set("message")} className="field resize-y min-h-32" {...describe("message")} />
+      <Field
+        id="message"
+        label="Message"
+        error={errors.message}
+        hint={
+          <p aria-hidden="true" className={`text-xs mt-1.5 tabular-nums shrink-0 ${values.message.length >= MESSAGE_MAX - 100 ? "text-amber-400" : "text-zinc-500"}`}>
+            {values.message.length}/{MESSAGE_MAX}
+          </p>
+        }
+      >
+        <textarea id="message" name="message" rows={5} maxLength={MESSAGE_MAX} value={values.message} onChange={set("message")} className="field resize-y min-h-32" {...describe("message")} />
       </Field>
 
       <input ref={trapRef} type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
