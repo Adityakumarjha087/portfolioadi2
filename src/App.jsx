@@ -3,6 +3,7 @@ import { AnimatePresence, MotionConfig } from "framer-motion";
 import LoadingScreen from "./components/LoadingScreen";
 import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
+import BackToTop from "./components/BackToTop";
 import Hero from "./sections/Hero";
 import About from "./sections/About";
 import Experience from "./sections/Experience";
@@ -59,6 +60,7 @@ export default function App() {
           <Resume />
           <Contact />
         </main>
+        <BackToTop />
       </div>
     </MotionConfig>
   );
