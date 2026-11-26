@@ -21,6 +21,7 @@ export default function Projects() {
   const [expanded, setExpanded] = useState(false);
   const [active, setActive] = useState(null);
   const triggerRef = useRef(null);
+  const searchRef = useRef(null);
 
   const open = (project) => {
     triggerRef.current = document.activeElement;
@@ -86,18 +87,29 @@ export default function Projects() {
           <div className="relative lg:w-72">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" aria-hidden="true" />
             <input
+              ref={searchRef}
               type="search"
               aria-label="Search projects"
               placeholder="Search by name or tech"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && query) {
+                  e.preventDefault();
+                  setQuery("");
+                }
+              }}
               className="field !pl-11 !pr-10 !py-2.5 !rounded-full"
             />
             {query && (
               <button
                 type="button"
                 aria-label="Clear search"
-                onClick={() => setQuery("")}
+                onClick={() => {
+                  setQuery("");
+                  // The button unmounts once the query is empty, so keep focus in the field.
+                  searchRef.current?.focus();
+                }}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" aria-hidden="true" />
