@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Check, Copy, Loader2, Send } from "lucide-react";
 import { profile } from "../data/site";
@@ -104,6 +104,12 @@ export default function ContactForm() {
   const [status, setStatus] = useState("idle");
   const formRef = useRef(null);
   const trapRef = useRef(null);
+  const sentRef = useRef(null);
+
+  // The form unmounts after a successful send; move focus to the confirmation.
+  useEffect(() => {
+    if (status === "sent") sentRef.current?.focus();
+  }, [status]);
 
   const set = (key) => (e) => {
     setValues((v) => ({ ...v, [key]: e.target.value }));
@@ -140,10 +146,12 @@ export default function ContactForm() {
   if (status === "sent") {
     return (
       <motion.div
+        ref={sentRef}
+        tabIndex={-1}
         role="status"
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="min-h-96 flex flex-col items-center justify-center text-center gap-4"
+        className="min-h-96 flex flex-col items-center justify-center text-center gap-4 outline-none"
       >
         <motion.span
           className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center"
@@ -163,6 +171,8 @@ export default function ContactForm() {
           onClick={() => {
             setValues(EMPTY);
             setStatus("idle");
+            // Land on the first field again instead of losing focus.
+            requestAnimationFrame(() => formRef.current?.elements.name?.focus());
           }}
         >
           Send another
