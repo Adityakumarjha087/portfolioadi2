@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { navItems, profile } from "../data/site";
@@ -8,6 +8,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const toggleRef = useRef(null);
+  const menuRef = useRef(null);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, restDelta: 0.001 });
 
@@ -38,8 +40,17 @@ export default function Navbar() {
     if (!isOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Move focus into the menu, and hide the page behind it from keyboards
+    // and screen readers while it is open.
+    const main = document.getElementById("main-content");
+    main?.setAttribute("inert", "");
+    menuRef.current?.querySelector("a")?.focus();
+    const toggle = toggleRef.current;
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") setIsOpen(false);
+      if (e.key === "Escape") {
+        setIsOpen(false);
+        toggle?.focus();
+      }
     };
     const desktop = window.matchMedia("(min-width: 1024px)");
     const onDesktop = (e) => e.matches && setIsOpen(false);
@@ -47,6 +58,7 @@ export default function Navbar() {
     desktop.addEventListener("change", onDesktop);
     return () => {
       document.body.style.overflow = previousOverflow;
+      main?.removeAttribute("inert");
       window.removeEventListener("keydown", handleKeyDown);
       desktop.removeEventListener("change", onDesktop);
     };
@@ -100,6 +112,7 @@ export default function Navbar() {
 
           <button
             type="button"
+            ref={toggleRef}
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden p-2 -mr-2 text-white cursor-pointer"
             aria-label={isOpen ? "Close menu" : "Open menu"}
@@ -116,6 +129,7 @@ export default function Navbar() {
         {isOpen && (
           <motion.div
             id="mobile-menu"
+            ref={menuRef}
             className="fixed inset-0 z-30 bg-black lg:hidden overflow-y-auto"
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
