@@ -124,7 +124,7 @@ export default function Hero({ ready }) {
                 href={href}
                 target={href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                aria-label={label}
+                aria-label={href.startsWith("http") ? `${label} (opens in a new tab)` : label}
                 className="flex p-2.5 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
               >
                 <Icon className="w-5 h-5" />

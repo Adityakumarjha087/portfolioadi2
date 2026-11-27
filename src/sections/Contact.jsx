@@ -79,6 +79,7 @@ export default function Contact() {
                       className="block font-display font-semibold text-white truncate after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-white"
                     >
                       {value}
+                      {isWeb && <span className="sr-only"> (opens in a new tab)</span>}
                     </a>
                   </div>
                   {copy ? (
