@@ -143,4 +143,8 @@ section[id] { scroll-margin-top: 4.5rem; }
     animation: none !important;
     transition-duration: 0s !important;
   }
+  /* A still marquee would clip most logos, so show each one once and wrap them. */
+  .marquee { mask-image: none; }
+  .marquee-track { width: auto; flex-wrap: wrap; justify-content: center; row-gap: 1.5rem; }
+  .marquee-dup { display: none; }
 }

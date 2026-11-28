@@ -65,7 +65,7 @@ export default function Skills() {
       <div className="marquee overflow-hidden border-y border-dark-border py-8 mb-14" aria-hidden="true">
         <div className="marquee-track">
           {[...marquee, ...marquee].map((s, i) => (
-            <span key={i} style={{ "--brand": brandColor(s) }} className="marquee-logo px-8 md:px-10">
+            <span key={i} style={{ "--brand": brandColor(s) }} className={`marquee-logo px-8 md:px-10${i >= marquee.length ? " marquee-dup" : ""}`}>
               <SkillIcon name={s} className="w-10 h-10 md:w-12 md:h-12" />
             </span>
           ))}
